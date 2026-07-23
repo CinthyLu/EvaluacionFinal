@@ -11,7 +11,7 @@ public class UserController {
     @GetMapping("/eligible") @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponseDto> findEligible(){return service.findEligible();
        
-       // age>=18, active=true
+      
     }
 
 }
