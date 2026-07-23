@@ -11,4 +11,5 @@ public interface SupplyService {
       List<SupplyResponseDto> findLowStock(Integer maxQuantity);
 
       SupplyResponseDto updateQuantity(Long id, UpdateSupplyQuantityDto dto);
+      void delete(Long id);
 }

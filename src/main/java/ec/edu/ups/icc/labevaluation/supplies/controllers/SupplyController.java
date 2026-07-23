@@ -54,6 +54,14 @@ public class SupplyController {
         return ResponseEntity.ok(response);
     }
     
+@DeleteMapping("/{id}")
+@PreAuthorize("hasAnyRole('ADMIN', 'COORDINATOR')")
+public ResponseEntity<Void> delete(@PathVariable Long id) {
+    service.delete(id);
+    return ResponseEntity.noContent().build();
+}
+
+    
     
 
 }

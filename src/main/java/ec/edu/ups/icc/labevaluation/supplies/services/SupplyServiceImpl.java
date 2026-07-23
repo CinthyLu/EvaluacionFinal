@@ -33,24 +33,40 @@ public class SupplyServiceImpl implements SupplyService {
         return SupplyMapper.toResponse(saved);
     }
 
-
- @Override
+    @Override
     @Transactional(readOnly = true)
     public List<SupplyResponseDto> findLowStock(Integer maxQuantity) {
-         return repository.findByActiveTrueAndDeletedFalseAndQuantityLessThanOrderByQuantityAsc(maxQuantity)
+        return repository.findByActiveTrueAndDeletedFalseAndQuantityLessThanOrderByQuantityAsc(maxQuantity)
                 .stream()
                 .map(SupplyMapper::toResponse)
                 .toList();
     }
 
-@Override
-@Transactional
-public SupplyResponseDto updateQuantity(Long id, UpdateSupplyQuantityDto dto) {
-    SupplyEntity entity = repository.findByIdAndDeletedFalse(id)
-            .orElseThrow(() -> new NotFoundException("SUPPLY_NOT_FOUND", "Supply not found"));
+    @Override
+    @Transactional
+    public SupplyResponseDto updateQuantity(Long id, UpdateSupplyQuantityDto dto) {
+        SupplyEntity entity = repository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException("SUPPLY_NOT_FOUND", "Supply not found"));
 
-    entity.setQuantity(dto.quantity());
-    SupplyEntity saved = repository.save(entity);
-    return SupplyMapper.toResponse(saved);
-}
+        entity.setQuantity(dto.quantity());
+        SupplyEntity saved = repository.save(entity);
+        return SupplyMapper.toResponse(saved);
+    }
+
+   
+    @Override
+    @Transactional
+    public void delete(Long id) {
+      
+        SupplyEntity entity = repository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException("SUPPLY_NOT_FOUND", "Supply not found"));
+
+               if (entity.getQuantity() > 0) {
+            throw new SupplyConflictException("Supply cannot be deleted while quantity is greater than zero");
+        }
+
+        entity.setDeleted(true);
+        entity.setActive(false);
+        repository.save(entity);
+    }
 }
