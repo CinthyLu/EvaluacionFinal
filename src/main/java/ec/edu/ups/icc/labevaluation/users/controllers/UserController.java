@@ -9,5 +9,10 @@ public class UserController {
     private final UserService service;
     public UserController(UserService service){this.service=service;}
     @GetMapping("/eligible") @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponseDto> findEligible(){return service.findEligible();}
+    public List<UserResponseDto> findEligible(){return service.findEligible();
+       
+       // age>=18, active=true
+    }
+
 }
+
