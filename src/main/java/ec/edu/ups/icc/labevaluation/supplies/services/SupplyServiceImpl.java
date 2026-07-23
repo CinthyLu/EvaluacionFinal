@@ -6,6 +6,9 @@ import ec.edu.ups.icc.labevaluation.supplies.entities.SupplyEntity;
 import ec.edu.ups.icc.labevaluation.supplies.exceptions.SupplyConflictException;
 import ec.edu.ups.icc.labevaluation.supplies.mappers.SupplyMapper;
 import ec.edu.ups.icc.labevaluation.supplies.repositories.SupplyRepository;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,5 +30,15 @@ public class SupplyServiceImpl implements SupplyService {
         SupplyEntity entity = SupplyMapper.toEntity(dto);
         SupplyEntity saved = repository.save(entity);
         return SupplyMapper.toResponse(saved);
+    }
+
+
+ @Override
+    @Transactional(readOnly = true)
+    public List<SupplyResponseDto> findLowStock(Integer maxQuantity) {
+        return repository.findByActiveTrueAndDeletedFalseAndQuantityLessThanOrderByQuantityAsc(maxQuantity)
+                .stream()
+                .map(SupplyMapper::toResponse)
+                .toList();
     }
 }
