@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SupplyRepository extends JpaRepository<SupplyEntity, Long> {
     boolean existsByNameIgnoreCaseAndDeletedFalse(String name);
-     List<SupplyEntity> findByActiveTrueAndDeletedFalseAndQuantityLessThanOrderByQuantityAsc(Integer maxQuantity);
-     Optional<SupplyEntity> findByIdAndDeletedFalse(Long id);
-}
 
+    List<SupplyEntity> findByActiveTrueAndDeletedFalseAndQuantityLessThanOrderByQuantityAsc(Integer maxQuantity);
+
+    Optional<SupplyEntity> findByIdAndDeletedFalse(Long id);
+}
