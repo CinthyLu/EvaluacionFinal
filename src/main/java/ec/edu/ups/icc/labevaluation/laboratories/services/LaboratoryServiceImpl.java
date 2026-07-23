@@ -11,7 +11,10 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     public LaboratoryServiceImpl(LaboratoryRepository repository){this.repository=repository;}
     @Override @Transactional(readOnly=true)
     public List<LaboratoryResponseDto> findAvailable(Long campusId, Integer minCapacity){
-        return repository.findByActiveTrueAndDeletedFalseOrderByIdAsc().stream().map(LaboratoryMapper::toResponse).toList();
+       return repository.findByCampus_IdAndCapacityGreaterThanEqualAndActiveTrueAndDeletedFalseAndCampus_ActiveTrueAndCampus_DeletedFalseOrderByCapacityDesc(campusId, minCapacity)    
+            .stream()
+            .map(LaboratoryMapper::toResponse)
+            .toList();
     }
     @Override @Transactional(readOnly=true)
     public LaboratoryResponseDto findOne(Long id){
@@ -19,3 +22,5 @@ public class LaboratoryServiceImpl implements LaboratoryService {
             .orElseThrow(() -> new IllegalStateException("Laboratory not found"));
     }
 }
+
+
